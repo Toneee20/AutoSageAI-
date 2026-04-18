@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoSageAI · Services Catalogue</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Exo+2:wght@300;400;500;600;700&family=Orbitron:wght@600;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#050b17; --card:#0a1222; --card-2:#0d1628;
+  --cyan:#00c3ff; --green:#00e676; --orange:#f07820; --gold:#f5c842; --violet:#7c3aed;
+  --white:#eef6ff; --muted:rgba(238,246,255,.55); --dim:rgba(238,246,255,.28); --faint:rgba(238,246,255,.08);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);font-family:'Exo 2',sans-serif;color:var(--white);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body.modal-open{overflow:hidden}
+
+body::before{content:'';position:fixed;inset:0;background-image:
+  radial-gradient(circle at 15% 10%, rgba(0,195,255,.08) 0%, transparent 40%),
+  radial-gradient(circle at 85% 90%, rgba(124,58,237,.06) 0%, transparent 45%),
+  radial-gradient(circle at 50% 50%, rgba(0,230,118,.03) 0%, transparent 60%);
+  pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;inset:0;background-image:
+  linear-gradient(rgba(0,195,255,.015) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(0,195,255,.015) 1px,transparent 1px);
+  background-size:40px 40px;pointer-events:none;z-index:0}
+
+.wrap{position:relative;z-index:1;max-width:1180px;margin:0 auto;padding:0 20px 60px}
+
+/* HEADER */
+.top{padding:18px 0;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--faint);position:sticky;top:0;background:rgba(5,11,23,.88);backdrop-filter:blur(14px);z-index:50;margin:0 -20px;padding-left:20px;padding-right:20px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo svg{width:36px;height:36px;flex-shrink:0}
+.brand .b-name{font-family:'Rajdhani',sans-serif;font-size:1.05rem;font-weight:700;color:rgba(238,246,255,.7);letter-spacing:.06em;line-height:1.1}
+.brand .b-name em{color:var(--cyan);font-style:normal}
+.brand .b-tag{font-family:'Orbitron',sans-serif;font-size:.52rem;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin-top:3px}
+.pill-live{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:30px;background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.22);font-family:'Orbitron',sans-serif;font-size:.56rem;font-weight:700;color:var(--green);letter-spacing:.18em;text-transform:uppercase}
+.pill-live .pdot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* HERO */
+.hero{padding:48px 0 30px;position:relative}
+.hero-label{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:30px;background:rgba(0,195,255,.08);border:1px solid rgba(0,195,255,.22);font-family:'Orbitron',sans-serif;font-size:.56rem;font-weight:700;color:var(--cyan);letter-spacing:.18em;text-transform:uppercase;margin-bottom:22px}
+.hero h1{font-family:'Rajdhani',sans-serif;font-size:clamp(2.4rem,7vw,4.4rem);font-weight:700;line-height:.95;margin-bottom:18px;letter-spacing:-.01em}
+.hero h1 em{font-style:normal;background:linear-gradient(120deg,var(--cyan) 0%,var(--green) 50%,var(--gold) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;display:inline-block}
+.hero p.lead{font-size:1.04rem;color:var(--muted);max-width:640px;line-height:1.55;margin-bottom:24px}
+.hero p.sig{font-family:'Rajdhani',sans-serif;font-size:.96rem;font-weight:500;color:var(--gold);font-style:italic;max-width:640px;border-left:2px solid var(--gold);padding-left:14px}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:30px;padding:16px;background:rgba(10,18,34,.6);border:1px solid var(--faint);border-radius:14px}
+.stat{text-align:center;padding:6px 4px;border-right:1px solid var(--faint)}
+.stat:last-child{border-right:none}
+.stat .n{font-family:'Orbitron',sans-serif;font-size:1.55rem;font-weight:900;line-height:1}
+.stat:nth-child(1) .n{color:var(--cyan);text-shadow:0 0 20px rgba(0,195,255,.4)}
+.stat:nth-child(2) .n{color:var(--green);text-shadow:0 0 20px rgba(0,230,118,.4)}
+.stat:nth-child(3) .n{color:var(--orange);text-shadow:0 0 20px rgba(240,120,32,.4)}
+.stat:nth-child(4) .n{color:var(--gold);text-shadow:0 0 20px rgba(245,200,66,.4)}
+.stat .l{font-family:'Orbitron',sans-serif;font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-top:7px}
+@media(max-width:560px){
+  .stats{grid-template-columns:repeat(2,1fr);gap:10px}
+  .stat{border-right:none;border-bottom:1px solid var(--faint);padding-bottom:12px}
+  .stat:nth-child(odd){border-right:1px solid var(--faint)}
+  .stat:nth-last-child(-n+2){border-bottom:none;padding-bottom:6px}
+  .stat .n{font-size:1.3rem}
+}
+
+/* FILTER */
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin:34px 0 28px;padding:6px;background:rgba(10,18,34,.75);border:1px solid var(--faint);border-radius:14px;position:sticky;top:68px;z-index:40;backdrop-filter:blur(10px)}
+.fbtn{flex:1;min-width:130px;padding:10px 12px;border-radius:9px;border:none;background:transparent;color:var(--muted);font-family:'Rajdhani',sans-serif;font-size:.9rem;font-weight:600;letter-spacing:.04em;cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
+.fbtn:hover{background:rgba(0,195,255,.06);color:var(--white)}
+.fbtn.active{background:linear-gradient(120deg,rgba(0,195,255,.15),rgba(0,230,118,.1));color:var(--white);box-shadow:inset 0 0 0 1px rgba(0,195,255,.28)}
+.fbtn .ico{font-size:.92rem}
+@media(max-width:560px){
+  .fbtn{min-width:calc(50% - 3px);font-size:.82rem;padding:9px 8px}
+  .filters{top:64px}
+}
+
+/* CATEGORY */
+.cat{margin:48px 0;scroll-margin-top:160px}
+.cat-head{display:flex;align-items:flex-start;gap:16px;padding-bottom:20px;border-bottom:1px solid var(--faint);margin-bottom:24px}
+.cat-ico{width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;background:linear-gradient(135deg,rgba(0,195,255,.1),rgba(0,230,118,.05));border:1px solid rgba(0,195,255,.2)}
+.cat[data-line="app2"] .cat-ico{background:linear-gradient(135deg,rgba(240,120,32,.12),rgba(245,200,66,.06));border-color:rgba(240,120,32,.22)}
+.cat[data-line="wf2"] .cat-ico{background:linear-gradient(135deg,rgba(124,58,237,.12),rgba(0,195,255,.06));border-color:rgba(124,58,237,.22)}
+.cat[data-line="wfs"] .cat-ico{background:linear-gradient(135deg,rgba(0,230,118,.1),rgba(245,200,66,.05));border-color:rgba(0,230,118,.22)}
+.cat-meta{flex:1}
+.cat-name{font-family:'Rajdhani',sans-serif;font-size:1.65rem;font-weight:700;color:var(--white);line-height:1.1;margin-bottom:5px}
+.cat-sub{font-size:.88rem;color:var(--muted);line-height:1.45;max-width:580px}
+.cat-index{font-family:'Orbitron',sans-serif;font-size:.68rem;font-weight:700;color:var(--dim);letter-spacing:.16em;padding-top:6px}
+
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(max-width:720px){.grid{grid-template-columns:1fr}}
+
+/* MINI CARD */
+.mc{background:var(--card);border:1px solid var(--faint);border-radius:14px;padding:20px 20px 18px;position:relative;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,border-color .2s,box-shadow .2s}
+.mc:hover{transform:translateY(-2px);border-color:rgba(0,195,255,.2);box-shadow:0 8px 28px rgba(0,0,0,.4)}
+.mc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent,var(--cyan)),transparent);opacity:.7}
+.mc.t-starter{--accent:var(--cyan)}
+.mc.t-growth{--accent:var(--orange)}
+.mc.t-pro{--accent:var(--violet)}
+.mc.t-addons{--accent:var(--gold)}
+
+.mc-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.mc-tier{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-family:'Orbitron',sans-serif;font-size:.54rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;background:rgba(0,195,255,.08);color:var(--accent);border:1px solid rgba(0,195,255,.18)}
+.mc.t-growth .mc-tier{background:rgba(240,120,32,.08);border-color:rgba(240,120,32,.2)}
+.mc.t-pro .mc-tier{background:rgba(124,58,237,.1);border-color:rgba(124,58,237,.22)}
+.mc.t-addons .mc-tier{background:rgba(245,200,66,.08);border-color:rgba(245,200,66,.22)}
+.mc-code{font-family:'Orbitron',sans-serif;font-size:.55rem;color:var(--dim);letter-spacing:.14em}
+
+.mc-title{font-family:'Rajdhani',sans-serif;font-size:1.38rem;font-weight:700;line-height:1.08;margin-bottom:6px;color:var(--white)}
+.mc-title em{font-style:normal;color:var(--accent);display:block}
+.mc-sub{font-size:.83rem;color:var(--muted);line-height:1.45;margin-bottom:16px;font-style:italic;min-height:38px}
+
+.mc-price{display:flex;flex-direction:column;gap:8px;padding:12px 14px;border-radius:10px;background:rgba(5,11,23,.6);border:1px solid var(--faint);margin-bottom:14px}
+.pr-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.pr-lbl{font-family:'Orbitron',sans-serif;font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.pr-val{font-family:'Orbitron',sans-serif;font-size:.86rem;font-weight:700;color:var(--white)}
+.pr-val.setup{color:var(--cyan)}
+.pr-val.monthly{color:var(--green)}
+.mc.t-addons .pr-val{color:var(--gold);font-size:.76rem}
+
+.mc-agents{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px}
+.tag{padding:3px 9px;border-radius:6px;font-size:.68rem;color:rgba(238,246,255,.65);background:rgba(238,246,255,.04);border:1px solid var(--faint);font-weight:500}
+.mc.t-addons .tag{background:rgba(245,200,66,.06);border-color:rgba(245,200,66,.16);color:rgba(245,200,66,.8)}
+
+.mc-best{font-size:.77rem;color:var(--dim);line-height:1.45;margin-bottom:16px;padding-top:10px;border-top:1px dashed var(--faint)}
+.mc-best strong{color:var(--muted);font-family:'Orbitron',sans-serif;font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:4px}
+
+.mc-cta{display:flex;gap:8px;margin-top:auto}
+.mc-btn{padding:10px 12px;border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:.86rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .18s;cursor:pointer;border:none}
+.mc-btn.view{flex:1;background:linear-gradient(90deg,#0d4a7a,#1461d8);color:#fff;box-shadow:0 3px 14px rgba(20,97,216,.24)}
+.mc-btn.view:hover{opacity:.88;transform:translateY(-1px)}
+.mc-btn.wa{background:#25d366;color:#fff;flex:0 0 44px;padding:10px}
+.mc-btn.wa:hover{background:#1fb855;transform:translateY(-1px)}
+.mc-btn.wa svg{width:17px;height:17px;fill:#fff}
+
+.mc.t-addons .mc-title{font-size:1.22rem}
+.addons-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.ao{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;background:rgba(245,200,66,.04);border:1px solid rgba(245,200,66,.1);border-radius:8px;font-size:.77rem}
+.ao-name{color:rgba(238,246,255,.8);display:flex;align-items:center;gap:7px}
+.ao-price{font-family:'Orbitron',sans-serif;font-size:.65rem;font-weight:700;color:var(--gold);white-space:nowrap}
+
+/* FLOATING */
+.fcta-btn{display:inline-flex;align-items:center;gap:9px;padding:13px 20px;border-radius:40px;background:#25d366;color:#fff;font-family:'Rajdhani',sans-serif;font-size:.96rem;font-weight:700;letter-spacing:.05em;text-decoration:none;box-shadow:0 8px 30px rgba(37,211,102,.4);transition:transform .18s}
+.fcta-btn:hover{transform:translateY(-2px);background:#1fb855}
+.fcta-btn svg{width:18px;height:18px;fill:#fff}
+.float-cta-wrap{position:fixed;bottom:22px;right:22px;z-index:80}
+@media(max-width:560px){
+  .float-cta-wrap .fcta-btn span{display:none}
+  .float-cta-wrap .fcta-btn{padding:0;border-radius:50%;width:56px;height:56px;justify-content:center}
+  .float-cta-wrap .fcta-btn svg{width:24px;height:24px}
+}
+
+/* FOOTER */
+.foot{margin-top:60px;padding:30px 22px;background:rgba(10,18,34,.5);border:1px solid var(--faint);border-radius:16px;text-align:center}
+.foot .fline{font-family:'Rajdhani',sans-serif;font-size:1.08rem;color:var(--muted);margin-bottom:14px}
+.foot .fsite{font-family:'Orbitron',sans-serif;font-size:.7rem;color:var(--cyan);letter-spacing:.14em;margin-top:14px}
+.foot .fsig{font-family:'Rajdhani',sans-serif;font-size:.88rem;color:var(--gold);font-style:italic;margin-top:8px;opacity:.8}
+
+.cat.hidden{display:none}
+
+.mc,.cat-head{opacity:0;transform:translateY(14px);animation:rise .55s ease-out forwards}
+@keyframes rise{to{opacity:1;transform:translateY(0)}}
+
+/* ======= MODAL ======= */
+.modal{position:fixed;inset:0;z-index:200;display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
+.modal.open{display:flex;animation:fadeIn .25s ease-out}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal-bg{position:fixed;inset:0;background:rgba(3,7,15,.82);backdrop-filter:blur(8px);cursor:pointer}
+.modal-inner{position:relative;z-index:1;width:100%;max-width:560px;background:var(--card);border-radius:18px;border:1px solid rgba(0,195,255,.18);overflow:hidden;box-shadow:0 30px 100px rgba(0,0,0,.7),0 0 120px rgba(0,195,255,.08);margin:auto;animation:slideUp .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes slideUp{from{opacity:0;transform:translateY(28px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+.modal-topbar{height:3px;width:100%;background:linear-gradient(90deg,transparent 0%,var(--cyan) 30%,var(--green) 70%,transparent 100%);box-shadow:0 0 20px rgba(0,195,255,.6)}
+.modal.t-growth .modal-topbar{background:linear-gradient(90deg,transparent,var(--orange) 30%,var(--gold) 70%,transparent);box-shadow:0 0 20px rgba(240,120,32,.6)}
+.modal.t-pro .modal-topbar{background:linear-gradient(90deg,transparent,var(--violet) 30%,var(--gold) 70%,transparent);box-shadow:0 0 20px rgba(124,58,237,.6)}
+.modal.t-addons .modal-topbar{background:linear-gradient(90deg,transparent,var(--gold) 30%,var(--violet) 70%,transparent);box-shadow:0 0 20px rgba(245,200,66,.6)}
+
+.modal-close{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:50%;background:rgba(5,11,23,.7);border:1px solid var(--faint);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:3;transition:all .18s;font-size:1.1rem;line-height:1}
+.modal-close:hover{background:rgba(0,195,255,.1);border-color:rgba(0,195,255,.3);color:var(--white);transform:rotate(90deg)}
+
+.modal-card{position:relative}
+.modal-card::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(0,195,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(0,195,255,.022) 1px,transparent 1px);background-size:30px 30px;pointer-events:none;z-index:0}
+
+.m-hdr{padding:28px 28px 22px;position:relative;z-index:1;border-bottom:1px solid rgba(0,195,255,.07)}
+.m-orb{position:absolute;top:-60px;right:-60px;width:300px;height:300px;background:radial-gradient(circle,rgba(0,195,255,.11) 0%,transparent 60%);pointer-events:none}
+.modal.t-growth .m-orb{background:radial-gradient(circle,rgba(240,120,32,.12) 0%,transparent 60%)}
+.modal.t-pro .m-orb{background:radial-gradient(circle,rgba(124,58,237,.12) 0%,transparent 60%)}
+.modal.t-addons .m-orb{background:radial-gradient(circle,rgba(245,200,66,.1) 0%,transparent 60%)}
+
+.m-logo-row{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.m-logo-row svg{width:32px;height:32px}
+.m-lname{font-family:'Rajdhani',sans-serif;font-size:.88rem;font-weight:700;color:rgba(238,246,255,.6);letter-spacing:.06em;line-height:1.1}
+.m-lname em{color:var(--cyan);font-style:normal}
+.m-lsub{font-size:.56rem;color:rgba(238,246,255,.3);letter-spacing:.14em;text-transform:uppercase;margin-top:2px}
+
+.m-badge-row{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.m-tier-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 13px;border-radius:30px;font-family:'Orbitron',sans-serif;font-size:.55rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;background:rgba(0,195,255,.08);color:var(--cyan);border:1px solid rgba(0,195,255,.2)}
+.modal.t-growth .m-tier-badge{background:rgba(240,120,32,.08);color:var(--orange);border-color:rgba(240,120,32,.22)}
+.modal.t-pro .m-tier-badge{background:rgba(124,58,237,.1);color:var(--violet);border-color:rgba(124,58,237,.24)}
+.modal.t-addons .m-tier-badge{background:rgba(245,200,66,.08);color:var(--gold);border-color:rgba(245,200,66,.22)}
+.m-vol-tag{font-size:.72rem;color:var(--orange);font-weight:600}
+
+.m-title{font-family:'Rajdhani',sans-serif;font-size:2.1rem;font-weight:700;color:var(--white);line-height:.96;margin-bottom:8px}
+.m-title em{color:var(--cyan);font-style:normal;display:block}
+.modal.t-growth .m-title em{color:var(--orange)}
+.modal.t-pro .m-title em{color:var(--violet)}
+.modal.t-addons .m-title em{color:var(--gold)}
+.m-sub{font-size:.83rem;color:var(--muted);font-style:italic;margin-bottom:18px}
+
+.m-price-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.m-pp{display:inline-flex;align-items:baseline;gap:7px;padding:8px 15px;border-radius:40px}
+.m-pp.s{background:rgba(0,195,255,.1);border:1.5px solid rgba(0,195,255,.28)}
+.m-pp.m{background:rgba(0,230,118,.08);border:1.5px solid rgba(0,230,118,.22)}
+.m-pp .a{font-family:'Orbitron',sans-serif;font-size:.98rem;font-weight:900}
+.m-pp.s .a{color:var(--cyan)}
+.m-pp.m .a{color:var(--green)}
+.m-pp .n{font-size:.65rem;color:var(--muted);letter-spacing:.04em}
+.m-sep{font-family:'Orbitron',sans-serif;font-size:.78rem;color:var(--dim);font-weight:700}
+
+.m-body{padding:24px 28px 28px;position:relative;z-index:1}
+.m-slabel{font-family:'Orbitron',sans-serif;font-size:.54rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(0,195,255,.5);margin-bottom:10px;margin-top:18px}
+.m-slabel:first-child{margin-top:0}
+.modal.t-growth .m-slabel{color:rgba(240,120,32,.55)}
+.modal.t-pro .m-slabel{color:rgba(124,58,237,.6)}
+.modal.t-addons .m-slabel{color:rgba(245,200,66,.55)}
+
+.m-agent-block{background:rgba(0,195,255,.06);border:1px solid rgba(0,195,255,.1);border-radius:12px;padding:14px 16px}
+.modal.t-growth .m-agent-block{background:rgba(240,120,32,.06);border-color:rgba(240,120,32,.12)}
+.modal.t-pro .m-agent-block{background:rgba(124,58,237,.07);border-color:rgba(124,58,237,.14)}
+.m-ag-top{display:flex;align-items:center;gap:14px;margin-bottom:10px}
+.m-ag-num{font-family:'Orbitron',sans-serif;font-size:2.2rem;font-weight:900;color:var(--cyan);line-height:1;flex-shrink:0;text-shadow:0 0 20px rgba(0,195,255,.5)}
+.modal.t-growth .m-ag-num{color:var(--orange);text-shadow:0 0 20px rgba(240,120,32,.5)}
+.modal.t-pro .m-ag-num{color:var(--violet);text-shadow:0 0 20px rgba(124,58,237,.5)}
+.m-ag-info .m-ag-title{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;color:var(--white)}
+.m-ag-info .m-ag-sub{font-size:.74rem;color:var(--muted);margin-top:2px}
+.m-ag-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:10px}
+.m-ag-item{padding:6px 10px;background:rgba(5,11,23,.5);border:1px solid var(--faint);border-radius:6px;font-size:.75rem;color:rgba(238,246,255,.75);text-align:center}
+
+.m-feat{list-style:none;display:flex;flex-direction:column;gap:9px}
+.m-feat li{display:flex;align-items:flex-start;gap:10px;font-size:.88rem;color:rgba(238,246,255,.78);line-height:1.45}
+.m-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);flex-shrink:0;margin-top:7px;box-shadow:0 0 8px var(--cyan)}
+.modal.t-growth .m-dot{background:var(--orange);box-shadow:0 0 8px var(--orange)}
+.modal.t-pro .m-dot{background:var(--violet);box-shadow:0 0 8px var(--violet)}
+
+.m-outcomes{display:flex;flex-direction:column;gap:7px;padding:12px 15px;background:rgba(0,230,118,.05);border:1px solid rgba(0,230,118,.1);border-radius:12px}
+.m-oc{display:flex;align-items:center;gap:9px;font-size:.85rem;color:rgba(0,230,118,.9);font-weight:500}
+.m-oc::before{content:'✅';font-size:.8rem;flex-shrink:0}
+
+.m-value{padding:14px 16px;border-radius:12px;background:rgba(240,120,32,.06);border:1px solid rgba(240,120,32,.14);border-left:3px solid var(--orange)}
+.m-vb-label{font-family:'Orbitron',sans-serif;font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;color:var(--orange);margin-bottom:7px}
+.m-vb-say{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:600;color:var(--white);line-height:1.35}
+.m-vb-say em{color:var(--orange);font-style:normal;font-weight:700}
+
+.m-best{background:rgba(238,246,255,.03);border:1px solid var(--faint);border-radius:10px;padding:12px 15px}
+.m-bb-text{font-size:.84rem;color:var(--muted);line-height:1.5}
+
+.m-addons{display:flex;flex-direction:column;gap:10px}
+.m-addon{padding:13px 15px;background:rgba(245,200,66,.05);border:1px solid rgba(245,200,66,.14);border-radius:10px}
+.m-addon-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+.m-addon-name{font-family:'Rajdhani',sans-serif;font-size:.98rem;font-weight:700;color:var(--white);display:flex;align-items:center;gap:7px}
+.m-addon-badge{font-size:.62rem;color:var(--gold);padding:2px 8px;background:rgba(245,200,66,.1);border-radius:12px;font-weight:600;letter-spacing:.04em}
+.m-addon-prices{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.m-addon-price{font-family:'Orbitron',sans-serif;font-size:.68rem;padding:3px 9px;background:rgba(5,11,23,.6);border:1px solid var(--faint);border-radius:14px;color:var(--gold);font-weight:700}
+.m-addon-desc{font-size:.77rem;color:var(--muted);line-height:1.45}
+
+.m-goldmine{padding:14px 16px;background:rgba(245,200,66,.08);border:1px solid rgba(245,200,66,.2);border-left:3px solid var(--gold);border-radius:10px}
+.m-gm-label{font-family:'Orbitron',sans-serif;font-size:.54rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.m-gm-text{font-family:'Rajdhani',sans-serif;font-size:.96rem;font-weight:600;color:var(--white);line-height:1.35}
+.m-gm-text em{color:var(--gold);font-style:normal;font-weight:700}
+
+.m-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(0,195,255,.1),transparent);margin:22px 0 18px}
+.m-cta{display:flex;flex-direction:column;gap:9px}
+.m-btn{width:100%;padding:13px 20px;border-radius:10px;font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;border:none;display:flex;align-items:center;justify-content:center;gap:9px;text-decoration:none;color:#fff;transition:opacity .18s,transform .12s}
+.m-btn:hover{opacity:.9;transform:translateY(-1px)}
+.m-btn.primary{background:linear-gradient(90deg,#0d4a7a,#1461d8);box-shadow:0 4px 20px rgba(20,97,216,.3)}
+.modal.t-growth .m-btn.primary{background:linear-gradient(90deg,#b45210,var(--orange));box-shadow:0 4px 20px rgba(240,120,32,.3)}
+.modal.t-pro .m-btn.primary{background:linear-gradient(90deg,#5b21b6,var(--violet));box-shadow:0 4px 20px rgba(124,58,237,.3)}
+.modal.t-addons .m-btn.primary{background:linear-gradient(90deg,#92400e,#d97706);box-shadow:0 4px 20px rgba(245,200,66,.3)}
+.m-btn.wa{background:#25d366}
+.m-btn.wa:hover{background:#1fb855}
+.m-btn.wa svg{width:17px;height:17px;fill:#fff}
+.m-site{text-align:center;font-size:.72rem;color:var(--dim);margin-top:4px;letter-spacing:.04em}
+
+@media(max-width:560px){
+  .modal{padding:10px}
+  .m-hdr{padding:22px 22px 18px}
+  .m-body{padding:20px 22px 24px}
+  .m-title{font-size:1.8rem}
+  .m-pp{padding:7px 12px}
+  .m-pp .a{font-size:.88rem}
+}
+</style>
+</head>
+<body>
+
+<!-- SVG sprite: proper branded WhatsApp logo -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <linearGradient id="brandLg" x1="0" y1="0" x2="56" y2="56">
+    <stop stop-color="#1461d8"/><stop offset=".5" stop-color="#00c3ff"/><stop offset="1" stop-color="#00e676"/>
+  </linearGradient>
+  <symbol id="wa-icon" viewBox="0 0 24 24">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </symbol>
+  <symbol id="brand-icon" viewBox="0 0 56 56">
+    <circle cx="28" cy="28" r="27" stroke="url(#brandLg)" stroke-width="2" fill="none"/>
+    <path d="M22 35l6-14 6 14M24.5 29.5h7" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </symbol>
+</svg>
+
+<div class="wrap">
+
+  <header class="top">
+    <div class="logo">
+      <svg><use href="#brand-icon"/></svg>
+      <div class="brand">
+        <div class="b-name">AutoSage <em>AI</em></div>
+        <div class="b-tag">Services Catalogue · 2026</div>
+      </div>
+    </div>
+    <span class="pill-live"><span class="pdot"></span> Live</span>
+  </header>
+
+  <section class="hero">
+    <div class="hero-label">🗂 16 Productised Services · 4 Service Lines</div>
+    <h1>Structured Intelligence.<br><em>Delivered.</em></h1>
+    <p class="lead">Complete service catalogue for AutoSageAI. Four service lines · three tiers each · stackable add-ons. Built for South African small and medium businesses ready to automate.</p>
+    <p class="sig">"Knowledge without execution is just entertainment."</p>
+    <div class="stats">
+      <div class="stat"><div class="n">4</div><div class="l">Service Lines</div></div>
+      <div class="stat"><div class="n">12</div><div class="l">Core Tiers</div></div>
+      <div class="stat"><div class="n">4</div><div class="l">Add-On Stacks</div></div>
+      <div class="stat"><div class="n">ZAR</div><div class="l">Priced for SA</div></div>
+    </div>
+  </section>
+
+  <nav class="filters">
+    <button class="fbtn active" data-filter="all"><span class="ico">⚡</span>All Services</button>
+    <button class="fbtn" data-filter="ba"><span class="ico">🤖</span>Business Automation</button>
+    <button class="fbtn" data-filter="app2"><span class="ico">📱</span>App Development</button>
+    <button class="fbtn" data-filter="wf2"><span class="ico">🔧</span>Workflow Systems</button>
+    <button class="fbtn" data-filter="wfs"><span class="ico">💻</span>Workflow Software</button>
+  </nav>
+
+  <div id="catalogue"></div>
+
+  <footer class="foot">
+    <p class="fline">Ready to deploy? Let's talk about which tier fits your business.</p>
+    <a href="https://wa.me/27660018931?text=Hi%2C%20I%27d%20like%20to%20discuss%20AutoSageAI%20services" class="fcta-btn" target="_blank">
+      <svg><use href="#wa-icon"/></svg>
+      WhatsApp 066 001 8931
+    </a>
+    <p class="fsig">Structured Intelligence. Delivered.</p>
+    <p class="fsite">www.autosageai.co.za</p>
+  </footer>
+
+</div>
+
+<div class="float-cta-wrap">
+  <a href="https://wa.me/27660018931?text=Hi%2C%20I%27m%20browsing%20the%20AutoSageAI%20catalogue" class="fcta-btn" target="_blank" aria-label="Chat on WhatsApp">
+    <svg><use href="#wa-icon"/></svg>
+    <span>Get In Touch</span>
+  </a>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-bg" data-close></div>
+  <div class="modal-inner">
+    <button class="modal-close" data-close aria-label="Close">✕</button>
+    <div class="modal-topbar"></div>
+    <div class="modal-card" id="modal-content"></div>
+  </div>
+</div>
+
+<script>
+const WA = 'https://wa.me/27660018931?text=';
+const waIco = '<svg><use href="#wa-icon"/></svg>';
+
+const CAT = [
+  {
+    line:'ba', name:'Business Automation', ico:'🤖',
+    sub:'AI agents that answer customers, sell products and run admin — on WhatsApp, web and voice. 24/7, no extra staff.',
+    cards:[
+      {
+        id:'BA-01', tier:'starter', tierLabel:'🥉 Starter Tier', extra:'👉 High-volume seller',
+        title:'Smart', titleEm:'Reception',
+        sub:'Your business answers every customer — 24/7, automatically',
+        setup:'R1,499 – R2,999', monthly:'R299 – R599',
+        agents:{count:'1', title:'Customer Service AI Agent', sub:'Website chatbot OR WhatsApp basic integration', items:[]},
+        features:['FAQ training — hours, location, policies','Basic product Q&A','Website chatbot OR WhatsApp integration'],
+        outcomes:['24/7 responses — no missed customers','Reduced interruptions to staff'],
+        whatItDoes:'Your business <em>answers every customer automatically</em> — even at 2am, on weekends, and while your staff are busy with other work.',
+        bestFor:'🏪 Township shops · Local retailers · Small businesses drowning in WhatsApp messages',
+        ctaLabel:'Get Started · From R1,499',
+        tags:['1 AI Agent','Web chatbot','WhatsApp basic']
+      },
+      {
+        id:'BA-02', tier:'growth', tierLabel:'🥈 Growth Tier', extra:'🔥 Most profitable tier',
+        title:'Sales Assistant', titleEm:'System',
+        sub:'Automated selling, upselling & lead generation — 24/7',
+        setup:'R4,999 – R9,999', monthly:'R999 – R1,999',
+        agents:{count:'2–3', title:'AI Agents Working For You', sub:'WhatsApp integration 🔥 recommended for SA',
+          items:['Customer Service Agent','Sales Assistant Agent','Basic Orders Agent']},
+        features:['WhatsApp integration (🔥 SA recommended)','Product catalog training','Lead capture — name, number, interest','Automated upselling + cross-selling'],
+        outcomes:['Automated selling — no human needed','Upselling + cross-selling on autopilot','Lead generation pipeline running 24/7'],
+        whatItDoes:'Your AI agents <em>qualify leads, sell products and follow up with customers</em> — all on WhatsApp, all without a human lifting a finger.',
+        bestFor:'🛒 Retailers · 💊 Pharmacies · 🏥 Clinics · Any business getting 20+ WhatsApp enquiries daily',
+        ctaLabel:'Deploy My Sales System · From R4,999',
+        tags:['2–3 AI Agents','Sales + Leads','WhatsApp 🔥']
+      },
+      {
+        id:'BA-03', tier:'pro', tierLabel:'🥇 Pro Tier', extra:'🏆 For serious businesses',
+        title:'Full Digital', titleEm:'Workforce',
+        sub:'Near-full automation — scale without hiring more staff',
+        setup:'R14,999 – R29,999', monthly:'R2,999 – R6,999',
+        agents:{count:'5–7', title:'AI Agents — Full Digital Team', sub:'Full WhatsApp + CRM + Smart Workflows',
+          items:['Customer Service','Sales Agent','Inventory Agent','Orders Agent','Marketing Agent','Admin Agent']},
+        features:['Full WhatsApp automation','CRM / Google Sheets integration','Smart workflows — booking, order tracking, stock alerts','Scalable system — grows with your business'],
+        outcomes:['Near full automation of routine tasks','Data-driven operations & real-time reporting','Scale without hiring more staff'],
+        whatItDoes:'A full AI team <em>runs your customer service, sales, inventory, orders and admin</em> — simultaneously, 24/7, without adding headcount.',
+        bestFor:"🏢 Multi-location businesses · Franchises · High-volume operations that can't afford to miss a single lead",
+        ctaLabel:'Deploy My Digital Workforce · From R14,999',
+        tags:['5–7 AI Agents','CRM integration','Smart workflows']
+      },
+      {
+        id:'BA-04', tier:'addons',
+        title:'Automation', titleEm:'Add-Ons',
+        sub:'Stack onto any tier — this is where your income compounds',
+        tierLabel:'⚙️ Add-Ons · Upsell Like a Pro',
+        addons:[
+          {icon:'📲', name:'WhatsApp Automation Setup', badge:'🔥 SA Essential', prices:['R1,500–R3,500 once-off','R300–R800/mo API'],
+           desc:'Full WhatsApp Business API. <strong>Non-negotiable for the SA market</strong> — this is where your clients\' customers already are.'},
+          {icon:'🛒', name:'Product Catalog Integration', badge:'Scalable', prices:['R1,000–R5,000 once-off'],
+           desc:'Train agents on your full product range. <strong>Price depends on number of products.</strong> More products = bigger deal for you.'},
+          {icon:'🔁', name:'Monthly Optimization', badge:'⭐ Key', prices:['R500–R2,000/month'],
+           desc:'Improving responses, adding new products, fixing gaps. <strong>This is your recurring revenue engine — never skip it.</strong>'},
+          {icon:'📣', name:'Marketing Automation', badge:'High Value', prices:['R1,500–R4,000/month'],
+           desc:'Promotions, bulk WhatsApp campaigns & social content. <strong>Turns your automation into a marketing machine.</strong>'}
+        ],
+        goldmine:'10 clients × R2,200/month recurring = <em>R22,000/month — without building new sites constantly.</em>',
+        goldLabel:'💰 The Real Game',
+        ctaLabel:'Discuss Automation Add-Ons'
+      }
+    ]
+  },
+  {
+    line:'app2', name:'App Development', ico:'📱',
+    sub:"Custom mobile and web apps — from branded customer apps to full operations platforms. Your business in your customers' pockets.",
+    cards:[
+      {
+        id:'APP-01', tier:'starter', tierLabel:'🥉 Starter App',
+        title:'Smart', titleEm:'Business App',
+        sub:"Your business in your customer's pocket",
+        setup:'R4,999 – R9,999', monthly:'R299 – R799',
+        agents:{count:'1', title:'Simple mobile-friendly web app (PWA)', sub:'Feels like a native app — no Play Store needed',
+          items:['Contact / enquiry form','WhatsApp integration','Service / product display','Booking or request form']},
+        features:['Clean UI — feels like a native app on phone','Basic automation (form → WhatsApp / email)','Fast loading & lightweight','Hosting + monthly maintenance included'],
+        whatItDoes:'Gives your business a <em>professional mobile presence</em> — customers tap, enquire, book and contact you without calling or visiting.',
+        bestFor:'🏪 Small businesses · Local shops · Service providers needing a professional mobile-first presence',
+        ctaLabel:'Build My App · From R4,999',
+        tags:['Branded PWA','Forms','WhatsApp link']
+      },
+      {
+        id:'APP-02', tier:'growth', tierLabel:'🥈 Growth App',
+        title:'Automation', titleEm:'App',
+        sub:'Automate your business operations and capture every customer',
+        setup:'R14,999 – R39,999', monthly:'R999 – R2,999',
+        agents:{count:'∞', title:'Full business app — web + mobile', sub:'Everything your team and customers need in one place', items:[]},
+        features:['User accounts / login system','Product or service catalog','Booking system or order system','AI chatbot integration 🤖','Push notifications (web / app)','Dashboard for business owner'],
+        whatItDoes:'A proper business app that <em>captures enquiries, takes orders and tracks customers</em> — while giving you a dashboard to run it all.',
+        bestFor:'Businesses getting 20+ daily enquiries that need a system — not just a website',
+        ctaLabel:'Build My Automation App · From R14,999',
+        tags:['Login + Orders','AI chatbot','Owner dashboard']
+      },
+      {
+        id:'APP-03', tier:'pro', tierLabel:'🥇 Pro App', extra:'🏆 Flagship build',
+        title:'Digital Operations', titleEm:'Platform',
+        sub:'Run your entire business from one intelligent system',
+        setup:'R49,999 – R150,000+', monthly:'R3,999 – R9,999',
+        agents:{count:'∞', title:'Full operations platform', sub:'Multi-user, multi-department, proprietary to your business', items:[]},
+        features:['Multi-user roles (admin, staff, manager)','Full AI agent system — multi-department 🤖','Inventory management','CRM — full customer tracking','Advanced analytics dashboard','Payment gateway integration','API integrations (POS, delivery, etc.)'],
+        whatItDoes:'Your own <em>proprietary operating system</em> — replacing the patchwork of tools, spreadsheets and apps most businesses are duct-taped together with.',
+        bestFor:'🏢 Multi-location businesses · Franchises · Serious scaling companies wanting full operational control',
+        ctaLabel:'Build My Platform · From R49,999',
+        tags:['Multi-user','AI agents','Payments + APIs']
+      },
+      {
+        id:'APP-04', tier:'addons',
+        title:'App', titleEm:'Add-Ons',
+        sub:'Stack onto any app tier — maximise value per client',
+        tierLabel:'⚙️ Add-Ons · Stack Your Income',
+        addons:[
+          {icon:'🤖', name:'AI Agent Integration', badge:'High Value', prices:['R2,000–R10,000 setup','R500–R2,000/mo'],
+           desc:'Embed a conversational AI agent into any app tier. <strong>Instantly 10× the perceived value</strong> and opens monthly recurring revenue.'},
+          {icon:'💳', name:'Payment Integration', badge:'Essential', prices:['R1,500–R5,000 once-off'],
+           desc:'Payfast, Yoco, Stripe, or card gateway wiring. <strong>Non-negotiable</strong> the moment the app needs to take money.'},
+          {icon:'📲', name:'Native App · Play Store', badge:'Premium', prices:['R5,000–R15,000 once-off'],
+           desc:'Wrap and list the app on the Google Play Store. <strong>Real "app" status</strong> for serious brands.'},
+          {icon:'🔁', name:'Monthly Optimization & Support', badge:'⭐ Recurring', prices:['R500–R3,000/month'],
+           desc:'Bug fixes, small features, hosting, SSL, updates. <strong>This is the retainer that turns one-off clients into monthly revenue.</strong>'}
+        ],
+        goldmine:'Apps need payments, updates and analytics every month — clients pay <em>for the evolution, not the delivery</em>.',
+        goldLabel:'💰 Why This Matters',
+        ctaLabel:'Discuss App Add-Ons'
+      }
+    ]
+  },
+  {
+    line:'wf2', name:'Workflow Systems', ico:'🔧',
+    sub:'Automate the repetitive back-office work — invoices, reports, approvals, data syncing. Fix the process, save the hours.',
+    cards:[
+      {
+        id:'WF-01', tier:'starter', tierLabel:'🥉 Starter Workflow',
+        title:'Process', titleEm:'Fixer',
+        sub:'Remove your daily repetitive admin tasks — once and forever',
+        setup:'R3,999 – R9,999', monthly:'R499 – R999',
+        agents:{count:'1–2', title:'Core workflows automated', sub:'Targeted, clean, no bloat — solves real daily pain points',
+          items:['Lead → WhatsApp response','Booking → confirmation','Form → Sheet + email']},
+        features:['Zapier or Make.com','Google Sheets / Airtable','WhatsApp triggers','Email automation'],
+        whatItDoes:'Automates your <em>lead responses, booking confirmations and form submissions</em> — so nothing gets missed and no one has to do it manually.',
+        bestFor:'🏪 Small businesses · Solo entrepreneurs · Admin-heavy shops drowning in manual tasks',
+        ctaLabel:'Fix My Processes · From R3,999',
+        tags:['1–2 workflows','Sheets / Make','WhatsApp triggers']
+      },
+      {
+        id:'WF-02', tier:'growth', tierLabel:'🥈 Growth Workflow',
+        title:'Business Automation', titleEm:'Engine',
+        sub:"Your business runs even when you're offline",
+        setup:'R14,999 – R39,999', monthly:'R1,499 – R3,999',
+        agents:{count:'5–10', title:'Connected workflow stack', sub:'Multi-step, multi-tool, cross-department automations', items:[]},
+        features:['Multi-step automations','Conditional logic — if this → then that','CRM or database integration','AI agent integration 🤖'],
+        whatItDoes:'Your business <em>runs itself across departments</em> — sales, ops, admin all talking to each other automatically, even at 3am.',
+        bestFor:'🛒 Retail stores · 🏥 Clinics · 📈 Service businesses scaling up & needing cross-department automation',
+        ctaLabel:'Install My Automation Engine · From R14,999',
+        tags:['5–10 workflows','Multi-tool','AI logic']
+      },
+      {
+        id:'WF-03', tier:'pro', tierLabel:'🥇 Pro Workflow', extra:'🏆 Flagship',
+        title:'Full Operations', titleEm:'Automation',
+        sub:'We automate how your entire business operates',
+        setup:'R49,999 – R120,000+', monthly:'R3,999 – R9,999',
+        agents:{count:'∞', title:'Enterprise-grade automation suite', sub:'Every repeatable operation — handled', items:[]},
+        features:['Advanced automation logic','Multi-department integration','Real-time dashboards','AI decision-making workflows 🤖','API integrations (POS, payments, delivery)'],
+        whatItDoes:'We <em>rebuild how your operation runs</em> — eliminating admin headcount and giving leadership real-time visibility across the whole business.',
+        bestFor:'🏢 Multi-location businesses · Franchises · High-volume operations needing full-scale automation',
+        ctaLabel:'Automate My Operation · From R49,999',
+        tags:['Enterprise','Real-time','AI decisions']
+      },
+      {
+        id:'WF-04', tier:'addons',
+        title:'Workflow', titleEm:'Add-Ons',
+        sub:"Stack onto any tier — don't skip these",
+        tierLabel:'🔌 Add-Ons · High Profit',
+        addons:[
+          {icon:'🤖', name:'AI Workflow Intelligence', badge:'Smart', prices:['R3,000–R15,000 setup','R1,000–R3,000/mo'],
+           desc:'Layer AI decision-making on top of workflows. <strong>Turns automation into a thinking system.</strong>'},
+          {icon:'📲', name:'WhatsApp Automation Layer', badge:'🔥 SA Critical', prices:['R2,000–R5,000 setup','R500–R1,500/mo'],
+           desc:'Route triggers and outputs through WhatsApp. <strong>Essential for any SA client.</strong>'},
+          {icon:'📊', name:'Dashboard & Reporting', badge:'Visibility', prices:['R2,000–R10,000 setup','R500–R2,000/mo'],
+           desc:'Real-time dashboards that show what the automations are actually doing. <strong>Owners love this.</strong>'},
+          {icon:'🔁', name:'Ongoing Optimization', badge:'⭐ Recurring', prices:['R1,000–R4,000/month'],
+           desc:'Monthly tuning, new triggers, broken-flow fixes. <strong>Every client needs this — make it non-negotiable.</strong>'}
+        ],
+        goldmine:'Each add-on <em>extends what the system can do</em> — more intelligence, more reach, more visibility, and continuous improvement that keeps the system growing with the business.',
+        goldLabel:'💰 Why They Stack',
+        ctaLabel:'Discuss Workflow Add-Ons'
+      }
+    ]
+  },
+  {
+    line:'wfs', name:'Workflow Software', ico:'💻',
+    sub:'Custom-built software products — lightweight tracking tools through to full operations OS. Proprietary systems your business owns.',
+    cards:[
+      {
+        id:'WFS-01', tier:'starter', tierLabel:'🥉 Starter System',
+        title:'Workflow', titleEm:'Lite',
+        sub:'One place to track and manage your daily business activity',
+        setup:'R6,999 – R14,999', monthly:'R999 – R1,999',
+        agents:{count:'1', title:'Lightweight web-based system', sub:'Built with Base44 / custom code — fast, clean, yours',
+          items:['1–3 workflows in the system','Clients / enquiries / orders DB','Clean submissions & leads view']},
+        features:['WhatsApp / email triggers','Status tracking — New / In Progress / Done','Clean web interface accessible from any device'],
+        whatItDoes:'Replaces messy <em>spreadsheets and chat threads</em> with one real system — so the owner finally sees what is happening in the business at a glance.',
+        bestFor:'🏪 Small businesses · Retail shops starting digital · Admin-heavy operations needing structure',
+        ctaLabel:'Build My System · From R6,999',
+        tags:['Web dashboard','1–3 workflows','Base44']
+      },
+      {
+        id:'WFS-02', tier:'growth', tierLabel:'🥈 Growth System',
+        title:'Workflow', titleEm:'Manager',
+        sub:'Control how work flows through your business from start to finish',
+        setup:'R19,999 – R49,999', monthly:'R1,999 – R4,999',
+        agents:{count:'4–8', title:'Connected multi-module system', sub:'CRM-style tracking across real business processes',
+          items:['4–8 connected workflows','CRM-style data tracking','Multi-stage pipelines']},
+        features:['Role-based access — admin / staff','AI agent integration 🤖','Basic analytics & reporting','WhatsApp automation layer'],
+        whatItDoes:'You <em>control the full flow</em> — from lead capture to delivery — inside one custom system built for how YOUR business actually works.',
+        bestFor:'🛒 Growing retail stores · 👁 Clinics / Optometry practices · 📈 Service businesses needing full process control',
+        ctaLabel:'Install Workflow Manager · From R19,999',
+        tags:['Multi-module','Role-based','AI + WhatsApp']
+      },
+      {
+        id:'WFS-03', tier:'pro', tierLabel:'🥇 Pro System', extra:'🏆 Flagship',
+        title:'Operations', titleEm:'OS',
+        sub:'Your entire business runs from one system',
+        setup:'R59,999 – R180,000+', monthly:'R4,999 – R12,000',
+        agents:{count:'∞', title:'Proprietary operations OS', sub:'Bespoke modules, AI-enhanced, single source of truth', items:[]},
+        features:['Custom modules built to your workflow','Full AI layer across every operation','Proprietary to your business — yours forever','Real-time reporting across all departments'],
+        whatItDoes:'We build you a <em>proprietary operations OS</em> — your own software, your own logic, your own data, running your entire business from one place.',
+        bestFor:'🏢 Multi-location businesses · Franchises · High-volume operations that need a single source of truth',
+        ctaLabel:'Build My Operations OS · From R59,999',
+        tags:['Custom OS','AI-enhanced','Bespoke']
+      },
+      {
+        id:'WFS-04', tier:'addons',
+        title:'Software', titleEm:'Add-Ons',
+        sub:'Stack onto any tier — this is where income compounds',
+        tierLabel:'🔌 Smart Add-Ons · Where You Print Money',
+        addons:[
+          {icon:'🤖', name:'AI Workflow Intelligence Layer', badge:'Smart', prices:['R5,000–R20,000 setup','R1,500–R4,000/mo'],
+           desc:'Adds intelligent decisioning, predictions and auto-routing. <strong>Turns software into a thinking system.</strong>'},
+          {icon:'📲', name:'WhatsApp Command Center', badge:'🔥 SA Critical', prices:['R3,000–R8,000 setup','R800–R2,000/mo'],
+           desc:"Run the software's actions from WhatsApp — approvals, updates, alerts. <strong>Critical for SA clients.</strong>"},
+          {icon:'📊', name:'Advanced Analytics Dashboard', badge:'Visibility', prices:['R3,000–R15,000 setup','R1,000–R3,000/mo'],
+           desc:'Custom executive dashboards, KPIs, forecasting. <strong>What owners will happily pay for every month.</strong>'},
+          {icon:'🔁', name:'Continuous Optimization', badge:'⭐ Critical', prices:['R1,500–R5,000/month'],
+           desc:'New features, bug fixes, small modules, hosting. <strong>Non-negotiable retainer — never sell software without this.</strong>'}
+        ],
+        goldmine:'Every growing client needs <em>more automation every month.</em> One client on optimization = R1,500–R5,000/month — forever.',
+        goldLabel:'💰 Print Money',
+        ctaLabel:'Discuss Software Add-Ons'
+      }
+    ]
+  }
+];
+
+/* Render catalogue cards */
+const catalogueEl = document.getElementById('catalogue');
+let catHtml = '';
+CAT.forEach((section, sIdx) => {
+  catHtml += '<section class="cat" data-line="'+section.line+'" id="'+section.line+'">'
+    + '<div class="cat-head">'
+    + '<div class="cat-ico">'+section.ico+'</div>'
+    + '<div class="cat-meta"><h2 class="cat-name">'+section.name+'</h2><p class="cat-sub">'+section.sub+'</p></div>'
+    + '<div class="cat-index">0'+(sIdx+1)+' / 04</div>'
+    + '</div><div class="grid">';
+
+  section.cards.forEach((c, i) => {
+    const tierBadge = '<span class="mc-tier">'+c.tierLabel+(c.extra?' '+c.extra:'')+'</span>';
+    const code = '<span class="mc-code">'+c.id+'</span>';
+
+    if (c.tier === 'addons') {
+      const aoList = c.addons.slice(0,4).map(a => {
+        const firstPrice = a.prices[0];
+        const priceShort = firstPrice.split(' ')[0] + (firstPrice.includes('/mo')||firstPrice.includes('month') ? '/mo' : '');
+        return '<div class="ao"><span class="ao-name">'+a.icon+' '+a.name+'</span><span class="ao-price">'+priceShort+'</span></div>';
+      }).join('');
+      const waMsg = encodeURIComponent("Hi, I'd like to discuss "+section.name+' Add-Ons');
+      catHtml += '<article class="mc t-addons">'
+        + '<div class="mc-head">'+tierBadge+code+'</div>'
+        + '<h3 class="mc-title">'+c.title+'<em>'+c.titleEm+'</em></h3>'
+        + '<p class="mc-sub">'+c.sub+'</p>'
+        + '<div class="addons-list">'+aoList+'</div>'
+        + '<p class="mc-best"><strong>'+c.goldLabel+'</strong>'+c.goldmine.replace(/<\/?em>/g,'')+'</p>'
+        + '<div class="mc-cta">'
+        + '<button class="mc-btn view" data-open="'+section.line+'-'+i+'">View Full Card →</button>'
+        + '<a href="'+WA+waMsg+'" class="mc-btn wa" target="_blank" aria-label="WhatsApp">'+waIco+'</a>'
+        + '</div></article>';
+    } else {
+      const tagsHtml = (c.tags||[]).map(t=>'<span class="tag">'+t+'</span>').join('');
+      const waMsg = encodeURIComponent("Hi, I'm interested in "+c.title+' '+c.titleEm+' - '+section.name);
+      catHtml += '<article class="mc t-'+c.tier+'">'
+        + '<div class="mc-head">'+tierBadge+code+'</div>'
+        + '<h3 class="mc-title">'+c.title+'<em>'+c.titleEm+'</em></h3>'
+        + '<p class="mc-sub">'+c.sub+'</p>'
+        + '<div class="mc-price">'
+        + '<div class="pr-row"><span class="pr-lbl">Setup</span><span class="pr-val setup">'+c.setup+'</span></div>'
+        + '<div class="pr-row"><span class="pr-lbl">Monthly</span><span class="pr-val monthly">'+c.monthly+'</span></div>'
+        + '</div>'
+        + '<div class="mc-agents">'+tagsHtml+'</div>'
+        + '<p class="mc-best"><strong>Best for</strong>'+c.bestFor+'</p>'
+        + '<div class="mc-cta">'
+        + '<button class="mc-btn view" data-open="'+section.line+'-'+i+'">View Full Card →</button>'
+        + '<a href="'+WA+waMsg+'" class="mc-btn wa" target="_blank" aria-label="WhatsApp">'+waIco+'</a>'
+        + '</div></article>';
+    }
+  });
+
+  catHtml += '</div></section>';
+});
+catalogueEl.innerHTML = catHtml;
+
+/* Modal */
+const modal = document.getElementById('modal');
+const modalContent = document.getElementById('modal-content');
+
+function renderModal(c, section) {
+  const waText = c.tier === 'addons'
+    ? "Hi, I'd like to discuss "+section.name+' Add-Ons'
+    : "Hi, I'm interested in the "+c.title+' '+c.titleEm+' — '+section.name+' ('+c.setup+' setup)';
+  const waLink = WA + encodeURIComponent(waText);
+
+  let body = '';
+  if (c.tier === 'addons') {
+    const addonsHtml = c.addons.map(a =>
+      '<div class="m-addon">'
+      + '<div class="m-addon-top"><div class="m-addon-name">'+a.icon+' '+a.name+'</div><span class="m-addon-badge">'+a.badge+'</span></div>'
+      + '<div class="m-addon-prices">'+a.prices.map(p=>'<span class="m-addon-price">'+p+'</span>').join('')+'</div>'
+      + '<p class="m-addon-desc">'+a.desc+'</p>'
+      + '</div>'
+    ).join('');
+    body = '<p class="m-slabel">Available Add-Ons</p>'
+      + '<div class="m-addons">'+addonsHtml+'</div>'
+      + '<div class="m-goldmine" style="margin-top:18px"><p class="m-gm-label">'+c.goldLabel+'</p><p class="m-gm-text">'+c.goldmine+'</p></div>';
+  } else {
+    const agItemsHtml = c.agents.items.length
+      ? '<div class="m-ag-grid">'+c.agents.items.map(it=>'<div class="m-ag-item">'+it+'</div>').join('')+'</div>'
+      : '';
+    const outcomesHtml = c.outcomes
+      ? '<p class="m-slabel">What Your Client Gets</p><div class="m-outcomes">'+c.outcomes.map(o=>'<div class="m-oc">'+o+'</div>').join('')+'</div>'
+      : '';
+    body = '<p class="m-slabel">'+(c.tier==='starter'?'AI Agent Deployed':"What's Deployed")+'</p>'
+      + '<div class="m-agent-block">'
+      + '<div class="m-ag-top"><div class="m-ag-num">'+c.agents.count+'</div>'
+      + '<div class="m-ag-info"><div class="m-ag-title">'+c.agents.title+'</div><div class="m-ag-sub">'+c.agents.sub+'</div></div></div>'
+      + agItemsHtml + '</div>'
+      + "<p class=\"m-slabel\">What's Included</p>"
+      + '<ul class="m-feat">'+c.features.map(f=>'<li><span class="m-dot"></span>'+f+'</li>').join('')+'</ul>'
+      + outcomesHtml
+      + '<p class="m-slabel">What This Does</p>'
+      + '<div class="m-value"><p class="m-vb-label">⚡ Value Delivered</p><p class="m-vb-say">'+c.whatItDoes+'</p></div>'
+      + '<p class="m-slabel">Best For</p>'
+      + '<div class="m-best"><p class="m-bb-text">'+c.bestFor+'</p></div>';
+  }
+
+  const priceBlock = c.tier === 'addons' ? '' :
+    '<div class="m-price-row">'
+    + '<div class="m-pp s"><span class="a">'+c.setup+'</span><span class="n">setup</span></div>'
+    + '<span class="m-sep">+</span>'
+    + '<div class="m-pp m"><span class="a">'+c.monthly+'</span><span class="n">/ month</span></div>'
+    + '</div>';
+
+  modalContent.innerHTML =
+    '<div class="m-hdr">'
+    + '<div class="m-orb"></div>'
+    + '<div class="m-logo-row"><svg><use href="#brand-icon"/></svg>'
+    + '<div><div class="m-lname">AutoSage <em>AI</em></div><div class="m-lsub">'+section.name+'</div></div></div>'
+    + '<div class="m-badge-row"><span class="m-tier-badge">'+c.tierLabel+'</span>'
+    + (c.extra ? '<span class="m-vol-tag">'+c.extra+'</span>' : '') + '</div>'
+    + '<h2 class="m-title">'+c.title+'<em>'+c.titleEm+'</em></h2>'
+    + '<p class="m-sub">'+c.sub+'</p>'
+    + priceBlock
+    + '</div>'
+    + '<div class="m-body">'+body
+    + '<div class="m-divider"></div>'
+    + '<div class="m-cta">'
+    + '<a href="'+waLink+'" class="m-btn primary" target="_blank">'+c.ctaLabel+'</a>'
+    + '<a href="'+waLink+'" class="m-btn wa" target="_blank">'+waIco+' WhatsApp 066 001 8931</a>'
+    + '<p class="m-site">www.autosageai.co.za</p>'
+    + '</div></div>';
+
+  modal.className = 'modal open t-' + c.tier;
+  document.body.classList.add('modal-open');
+  modal.setAttribute('aria-hidden','false');
+  modal.scrollTop = 0;
+}
+
+function closeModal() {
+  modal.classList.remove('open');
+  document.body.classList.remove('modal-open');
+  modal.setAttribute('aria-hidden','true');
+}
+
+document.addEventListener('click', e => {
+  const openBtn = e.target.closest('[data-open]');
+  if (openBtn) {
+    const parts = openBtn.dataset.open.split('-');
+    const lineKey = parts[0], idx = parseInt(parts[1],10);
+    const section = CAT.find(s => s.line === lineKey);
+    if (section) renderModal(section.cards[idx], section);
+    return;
+  }
+  if (e.target.closest('[data-close]')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+/* Filter */
+const fbtns = document.querySelectorAll('.fbtn');
+fbtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    fbtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.filter;
+    document.querySelectorAll('.cat').forEach(cat => {
+      if (f === 'all' || cat.dataset.line === f) {
+        cat.classList.remove('hidden');
+        if (f !== 'all') setTimeout(() => cat.scrollIntoView({behavior:'smooth',block:'start'}), 50);
+      } else {
+        cat.classList.add('hidden');
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>
